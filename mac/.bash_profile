@@ -14,7 +14,6 @@ function execHist(){
 	cat ~/.bash_history | egrep -E $@ | sed -n 1p
 }
 # deleted commentt checking launch daemon ok
-# ok change two 
 # kill a process
 function jkill(){
 	ps ax | grep $@ | sed -Ee 's/([0-9]+).*/\1/' | sed -n 1p | xargs kill
