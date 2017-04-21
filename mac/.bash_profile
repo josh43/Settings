@@ -19,6 +19,10 @@ function jkill(){
 	ps ax | grep $@ | sed -Ee 's/([0-9]+).*/\1/' | sed -n 1p | xargs kill
 	echo "GOOD SHOT"
 }
+# figure out who changed what line of code
+function whoDoneIt(){
+	git blame $1 -L $2
+}
 # you'll never guess what this does
 function gitCreateBranch(){
 	git checkout master
