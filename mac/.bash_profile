@@ -1,4 +1,3 @@
-
 alias 😆='\echo 'HAHAH''
 alias ls='\ls -ltr'
 export DELOREAN_PATH=/Users/joshua-apple/Documents/Work/delorean 
@@ -11,9 +10,28 @@ export C=/usr/bin/gcc
 export CMAKE_CXX_COMPILER=/usr/bin/g++
 export CXX=/usr/bin/g++
 function execHist(){
-	cat ~/.bash_history | egrep -E $@ | sed -n 1p
+	command="$(history | tail -n2 | sed -n 1,1p | sed -E s/[0-9]+/' '/)"
+	repeat=$@
+	echo $command
+	echo "repeating $command every $repeat seconds"
+	repeatLastCommand.js $repeat "$command"
 }
 # deleted commentt checking launch daemon ok
+
+function linesOfCodeMatchingRegex(){
+	echo "Counting lines of javascript code!";
+	totalLines="$(find ./ -regex ".$@$"  | xargs cat | wc -l)"
+	echo "Total lines for $PWD : $totalLines";
+
+	echo "Counting lines of top level directories";
+
+	topDirs="$(find . -maxdepth 1)"
+	for topDir in $topDirs
+	do
+		    topDirLine="$(find topDir -regex ".$@$"  | xargs cat | wc -l)"
+		    printf "Total lines(JS) in %30s : %10s\n" $topDir,$topDirLine
+    	done
+}
 # kill a process
 function jkill(){
 	ps ax | grep $@ | sed -Ee 's/([0-9]+).*/\1/' | sed -n 1p | xargs kill
@@ -74,6 +92,13 @@ function cd(){
 function pscpu(){
 	 top -o cpu -O +rsize -s 5 -n 20
 }
-
-
+# Thanks https://martinfitzpatrick.name/article/add-git-branch-name-to-terminal-prompt-mac/
+# Git branch in promp.
+parse_git_branch() {
+	    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+export PS1="\u@\h \W\[\e[34m\]\$(parse_git_branch)\[\e[0m\] $ "
+export col_green='\e[42m'
+export col_red='\e[41m'
+export col_blue='\e[44m'
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
